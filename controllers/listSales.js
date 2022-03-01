@@ -1,5 +1,5 @@
 const salesModel = require('../models/listSales');
-
+// Requisito 02
 const listAllSales = async (req, res, next) => {
   try {
     const sales = await salesModel.getAllSales();
@@ -9,7 +9,7 @@ const listAllSales = async (req, res, next) => {
     next(e);
   }
 };
-
+// Requisito 02
 const listSaleById = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -30,8 +30,20 @@ const listSaleById = async (req, res, next) => {
     next(e);
   }
 };
+// Requisito 07
+const createNewSale = async (req, res, next) => {
+  try {
+    const order = [...req.body];
+    const createdOrder = await salesModel.createSale(order);
+
+    return res.status(201).json(createdOrder);
+  } catch (e) {
+    next(e);
+  }
+};
 
 module.exports = {
   listAllSales,
   listSaleById,
+  createNewSale,
 };

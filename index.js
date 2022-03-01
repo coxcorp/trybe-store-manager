@@ -1,7 +1,6 @@
 require('dotenv').config();
 const express = require('express');
 const routers = require('./routes/router');
-// const salesController = require('./controllers/listSales');
 const error = require('./middlewares/error');
 
 const app = express();
@@ -14,14 +13,6 @@ app.get('/', (_request, response) => {
 });
 app.use('/products', routers.productRouter);
 app.use('/sales', routers.salesRouter);
-// Requisito 02 - Crie endpoints para listar os produtos e as vendas
-// app.get('/sales', salesController.listAllSales);
-// app.get('/sales/:id', salesController.listSaleById);
-
-// Requisito 07 - Crie um endpoint para cadastrar vendas
-// app.post('/sales');
-// Requisito 08 - Crie um endpoint para atualizar uma venda
-// app.put('/sales/:id');
 
 app.use(error);
 
