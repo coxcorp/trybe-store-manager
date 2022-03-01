@@ -22,7 +22,7 @@ app.get('/sales/:id', salesController.listSaleById);
 // Requisito 04 - Crie um endpoint para o cadastro de produtos
 app.post('/products', productsController.createNewProduct);
 // Requisito 05 - Crie um endpoint para atualizar um produto
-app.put('/products/:id');
+app.put('/products/:id', productsController.editProductById);
 // Requisito 06 - Crie um endpoint para deletar um produto
 app.delete('/products/:id', productsController.deleteProductById);
 // Requisito 07 - Crie um endpoint para cadastrar vendas

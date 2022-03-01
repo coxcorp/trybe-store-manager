@@ -22,20 +22,6 @@ const listProductById = async (req, res, next) => {
     next(e);
   }
 };
-// Requisito 06
-const deleteProductById = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const product = await productsModel.getProductById(Number(id));
-  
-    if (!product.length) return res.status(404).json({ message: 'Product not found' });
-
-    await productsModel.deleteProduct(id);
-    return res.status(204).end();
-  } catch (e) {
-    next(e);
-  }
-};
 // Requisito 04
 const createNewProduct = async (req, res, next) => {
   try {
@@ -52,10 +38,42 @@ const createNewProduct = async (req, res, next) => {
     next(e);
   }
 };
+// Requisito 05
+const editProductById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const product = await productsModel.getProductById(Number(id));
+  
+    if (!product.length) return res.status(404).json({ message: 'Product not found' });
+
+    const { name, quantity } = req.body;
+
+    const editedProduct = await productsModel.editProduct({ id: Number(id), name, quantity });
+
+    return res.status(200).json(editedProduct);
+  } catch (e) {
+    next(e);
+  }
+};
+// Requisito 06
+const deleteProductById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const product = await productsModel.getProductById(Number(id));
+  
+    if (!product.length) return res.status(404).json({ message: 'Product not found' });
+
+    await productsModel.deleteProduct(id);
+    return res.status(204).end();
+  } catch (e) {
+    next(e);
+  }
+};
 
 module.exports = {
   listAllProducts,
   listProductById,
-  deleteProductById,
   createNewProduct,
+  editProductById,
+  deleteProductById,
 };
