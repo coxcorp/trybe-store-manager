@@ -1,5 +1,5 @@
 const productsModel = require('../models/listProducts');
-
+// Requisito 02
 const listAllProducts = async (req, res, next) => {
   try {
     const products = await productsModel.getAllProducts();
@@ -9,16 +9,40 @@ const listAllProducts = async (req, res, next) => {
     next(e);
   }
 };
-
+// Requisito 02
 const listProductById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const products = await productsModel.getAllProducts();
-    const productById = products.find((product) => product.id === Number(id));
+    const product = await productsModel.getProductById(Number(id));
   
-    if (!productById) return res.status(404).json({ message: 'Product not found' });
+    if (!product.length) return res.status(404).json({ message: 'Product not found' });
   
-    return res.status(200).json(productById);
+    return res.status(200).json(product[0]);
+  } catch (e) {
+    next(e);
+  }
+};
+// Requisito 06
+const deleteProductById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const product = await productsModel.getProductById(Number(id));
+  
+    if (!product.length) return res.status(404).json({ message: 'Product not found' });
+
+    await productsModel.deleteProduct(id);
+    return res.status(204).end();
+  } catch (e) {
+    next(e);
+  }
+};
+// Requisito 04
+const createNewProduct = async (req, res, next) => {
+  try {
+    const { name, quantity } = req.body;
+    const createdProduct = await productsModel.createProduct({ name, quantity });
+
+    return res.status(201).json(createdProduct);
   } catch (e) {
     next(e);
   }
@@ -27,4 +51,6 @@ const listProductById = async (req, res, next) => {
 module.exports = {
   listAllProducts,
   listProductById,
+  deleteProductById,
+  createNewProduct,
 };

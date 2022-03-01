@@ -6,6 +6,8 @@ const error = require('./middlewares/error');
 
 const app = express();
 
+app.use(express.json());
+
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.send();
@@ -18,11 +20,11 @@ app.get('/sales', salesController.listAllSales);
 app.get('/sales/:id', salesController.listSaleById);
 
 // Requisito 04 - Crie um endpoint para o cadastro de produtos
-app.post('/products');
+app.post('/products', productsController.createNewProduct);
 // Requisito 05 - Crie um endpoint para atualizar um produto
 app.put('/products/:id');
 // Requisito 06 - Crie um endpoint para deletar um produto
-app.delete('/products/:id');
+app.delete('/products/:id', productsController.deleteProductById);
 // Requisito 07 - Crie um endpoint para cadastrar vendas
 app.post('/sales');
 // Requisito 08 - Crie um endpoint para atualizar uma venda
