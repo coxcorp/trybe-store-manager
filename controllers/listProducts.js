@@ -1,5 +1,5 @@
 const productsModel = require('../models/listProducts');
-// Requisito 02
+// Requisito 02 - Crie endpoints para listar os produtos e as vendas
 const listAllProducts = async (req, res, next) => {
   try {
     const products = await productsModel.getAllProducts();
@@ -9,7 +9,7 @@ const listAllProducts = async (req, res, next) => {
     next(e);
   }
 };
-// Requisito 02
+// Requisito 02 - Crie endpoints para listar os produtos e as vendas
 const listProductById = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -22,7 +22,7 @@ const listProductById = async (req, res, next) => {
     next(e);
   }
 };
-// Requisito 04
+// Requisito 04 - Crie um endpoint para o cadastro de produtos
 const createNewProduct = async (req, res, next) => {
   try {
     const { name, quantity } = req.body;
@@ -38,7 +38,7 @@ const createNewProduct = async (req, res, next) => {
     next(e);
   }
 };
-// Requisito 05
+// Requisito 05 - Crie um endpoint para atualizar um produto
 const editProductById = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -55,7 +55,7 @@ const editProductById = async (req, res, next) => {
     next(e);
   }
 };
-// Requisito 06
+// Requisito 06 - Crie um endpoint para deletar um produto
 const deleteProductById = async (req, res, next) => {
   try {
     const { id } = req.params;

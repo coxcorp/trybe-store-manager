@@ -1,5 +1,5 @@
 const connection = require('./connection');
-// Requisito 02
+// Requisito 02 - Crie endpoints para listar os produtos e as vendas
 const getAllSales = async () => {
   const [sales] = await connection.execute(`
   SELECT sp.sale_id AS saleId, s.date AS date, sp.product_id AS productId, sp.quantity AS quantity
@@ -10,7 +10,7 @@ const getAllSales = async () => {
 
   return sales;
 };
-// Requisito 02
+// Requisito 02 - Crie endpoints para listar os produtos e as vendas
 const getSaleById = async (id) => {
   const [sale] = await connection.execute(`
   SELECT sp.sale_id AS saleId, s.date AS date, sp.product_id AS productId, sp.quantity AS quantity
@@ -21,7 +21,7 @@ const getSaleById = async (id) => {
 
   return sale;
 };
-// Requisito 07
+// Requisito 07 - Crie um endpoint para cadastrar vendas
 const createSale = async (order) => {
   const [newSaleId] = await connection.execute(`
   INSERT INTO StoreManager.sales (date) VALUE (NOW());`);
@@ -36,9 +36,32 @@ const createSale = async (order) => {
     itemsSold: order,
   };
 };
+// Requisito 08 - Crie um endpoint para atualizar uma venda
+const editSaleById = async (sale) => {
+  await connection.execute(
+    `UPDATE
+      StoreManager.sales_products
+    SET
+      quantity = ?
+    WHERE
+      sale_id = ? AND product_id = ?;`,
+    [sale.quantity, sale.saleId, sale.productId],
+  );
+
+  return {
+    saleId: sale.saleId,
+    itemUpdated: [
+      {
+        productId: sale.productId,
+        quantity: sale.quantity,
+      },
+    ],
+  };
+};
 
 module.exports = {
   getAllSales,
   getSaleById,
   createSale,
+  editSaleById,
 };

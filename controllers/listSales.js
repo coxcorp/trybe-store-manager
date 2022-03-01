@@ -1,5 +1,5 @@
 const salesModel = require('../models/listSales');
-// Requisito 02
+// Requisito 02 - Crie endpoints para listar os produtos e as vendas
 const listAllSales = async (req, res, next) => {
   try {
     const sales = await salesModel.getAllSales();
@@ -9,7 +9,7 @@ const listAllSales = async (req, res, next) => {
     next(e);
   }
 };
-// Requisito 02
+// Requisito 02 - Crie endpoints para listar os produtos e as vendas
 const listSaleById = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -30,13 +30,27 @@ const listSaleById = async (req, res, next) => {
     next(e);
   }
 };
-// Requisito 07
+// Requisito 07 - Crie um endpoint para cadastrar vendas
 const createNewSale = async (req, res, next) => {
   try {
-    const order = [...req.body];
+    const order = req.body;
     const createdOrder = await salesModel.createSale(order);
 
     return res.status(201).json(createdOrder);
+  } catch (e) {
+    next(e);
+  }
+};
+// Requisito 08 - Crie um endpoint para atualizar uma venda
+const editSaleById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const { quantity, productId } = req.body[0];
+
+    const editedSale = await salesModel.editSaleById({ quantity, saleId: Number(id), productId });
+
+    return res.status(200).json(editedSale);
   } catch (e) {
     next(e);
   }
@@ -46,4 +60,5 @@ module.exports = {
   listAllSales,
   listSaleById,
   createNewSale,
+  editSaleById,
 };

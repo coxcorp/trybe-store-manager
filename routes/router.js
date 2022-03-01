@@ -19,7 +19,7 @@ productRouter.delete('/:id', productsController.deleteProductById);
 // Requisito 07 - Crie um endpoint para cadastrar vendas
 salesRouter.post('/', salesController.createNewSale);
 // Requisito 08 - Crie um endpoint para atualizar uma venda
-salesRouter.put('/:id');
+salesRouter.put('/:id', salesController.editSaleById);
 
 module.exports = {
   productRouter,
