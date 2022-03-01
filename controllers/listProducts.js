@@ -40,6 +40,11 @@ const deleteProductById = async (req, res, next) => {
 const createNewProduct = async (req, res, next) => {
   try {
     const { name, quantity } = req.body;
+
+    const products = await productsModel.getAllProducts();
+    const notUnique = products.find((product) => product.name === name);
+    if (notUnique) return res.status(409).json({ message: 'Product already exists' });
+
     const createdProduct = await productsModel.createProduct({ name, quantity });
 
     return res.status(201).json(createdProduct);
