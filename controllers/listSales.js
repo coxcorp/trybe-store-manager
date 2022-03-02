@@ -33,12 +33,15 @@ const listSaleById = async (req, res, next) => {
 // Requisito 07 - Crie um endpoint para cadastrar vendas
 const createNewSale = async (req, res, next) => {
   try {
-    const order = req.body;
+    const order = req.body[0];
+    console.log(order.productId);
+    console.log(order.quantity);
+    // Requisito 03
     if (!order.productId) return res.status(400).json({ message: '"productId" is required' });
-    if (!order.quantity) return res.status(400).json({ message: '"quantity" is required' });
     if (order.quantity < 1) {
       return res.status(422).json({ message: '"quantity" must be greater than or equal to 1' });
     }
+    if (!order.quantity) return res.status(400).json({ message: '"quantity" is required' });
 
     const createdOrder = await salesModel.createSale(order);
 
@@ -55,13 +58,13 @@ const editSaleById = async (req, res, next) => {
     const { quantity, productId } = req.body[0];
     // Requisito 03
     if (!productId) return res.status(400).json({ message: '"productId" is required' });
-    if (!quantity) return res.status(400).json({ message: '"quantity" is required' });
     if (quantity < 1) {
       return res.status(422).json({ message: '"quantity" must be greater than or equal to 1' });
     }
+    if (!quantity) return res.status(400).json({ message: '"quantity" is required' });
 
     const editedSale = await salesModel.editSaleById({ quantity, saleId: Number(id), productId });
-
+    
     return res.status(200).json(editedSale);
   } catch (e) {
     next(e);
