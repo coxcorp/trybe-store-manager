@@ -30,18 +30,24 @@ const listSaleById = async (req, res, next) => {
     next(e);
   }
 };
+// Requisito 03
+const validate07 = (order) => {
+  if (!order[0].productId) return { code: 400, message: '"productId" is required' };
+  if (order[0].quantity < 1) {
+    return {
+    code: 422, message: '"quantity" must be greater than or equal to 1' };
+  }
+  if (!order[0].quantity) return { code: 400, message: '"quantity" is required' };
+  return {};
+};
 // Requisito 07 - Crie um endpoint para cadastrar vendas
 const createNewSale = async (req, res, next) => {
   try {
-    const order = req.body[0];
-    console.log(order.productId);
-    console.log(order.quantity);
-    // Requisito 03
-    if (!order.productId) return res.status(400).json({ message: '"productId" is required' });
-    if (order.quantity < 1) {
-      return res.status(422).json({ message: '"quantity" must be greater than or equal to 1' });
+    const order = req.body;
+    const validations = validate07(order);
+    if (validations.message) {
+      return res.status(validations.code).json({ message: validations.message });
     }
-    if (!order.quantity) return res.status(400).json({ message: '"quantity" is required' });
 
     const createdOrder = await salesModel.createSale(order);
 
@@ -50,18 +56,25 @@ const createNewSale = async (req, res, next) => {
     next(e);
   }
 };
+// Requisito 03
+const validate08 = (productId, quantity) => {
+  if (!productId) return { code: 400, message: '"productId" is required' };
+  if (quantity < 1) {
+    return {
+    code: 422, message: '"quantity" must be greater than or equal to 1' };
+  }
+  if (!quantity) return { code: 400, message: '"quantity" is required' };
+  return {};
+};
 // Requisito 08 - Crie um endpoint para atualizar uma venda
 const editSaleById = async (req, res, next) => {
   try {
     const { id } = req.params;
-
     const { quantity, productId } = req.body[0];
-    // Requisito 03
-    if (!productId) return res.status(400).json({ message: '"productId" is required' });
-    if (quantity < 1) {
-      return res.status(422).json({ message: '"quantity" must be greater than or equal to 1' });
+    const validations = validate08(productId, quantity);
+    if (validations.message) {
+      return res.status(validations.code).json({ message: validations.message });
     }
-    if (!quantity) return res.status(400).json({ message: '"quantity" is required' });
 
     const editedSale = await salesModel.editSaleById({ quantity, saleId: Number(id), productId });
     
