@@ -27,13 +27,12 @@ const createProduct = async (product) => {
   };
 // Requisito 05 - Crie um endpoint para atualizar um produto
 const editProduct = async (product) => {
-  await connection.execute(
-    `UPDATE
+  await connection.execute(`
+    UPDATE
       StoreManager.products
     SET
-      name = ?, quantity = ? WHERE id = ?`,
-    [product.name, product.quantity, product.id],
-  );
+      name = ?, quantity = ? WHERE id = ?
+    `, [product.name, product.quantity, product.id]);
 
   return product;
 };

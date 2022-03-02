@@ -34,6 +34,12 @@ const listSaleById = async (req, res, next) => {
 const createNewSale = async (req, res, next) => {
   try {
     const order = req.body;
+    if (!order.productId) return res.status(400).json({ message: '"productId" is required' });
+    if (!order.quantity) return res.status(400).json({ message: '"quantity" is required' });
+    if (order.quantity < 1) {
+      return res.status(422).json({ message: '"quantity" must be greater than or equal to 1' });
+    }
+
     const createdOrder = await salesModel.createSale(order);
 
     return res.status(201).json(createdOrder);
@@ -47,6 +53,12 @@ const editSaleById = async (req, res, next) => {
     const { id } = req.params;
 
     const { quantity, productId } = req.body[0];
+    // Requisito 03
+    if (!productId) return res.status(400).json({ message: '"productId" is required' });
+    if (!quantity) return res.status(400).json({ message: '"quantity" is required' });
+    if (quantity < 1) {
+      return res.status(422).json({ message: '"quantity" must be greater than or equal to 1' });
+    }
 
     const editedSale = await salesModel.editSaleById({ quantity, saleId: Number(id), productId });
 
