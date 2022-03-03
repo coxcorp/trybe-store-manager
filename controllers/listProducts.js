@@ -9,7 +9,7 @@ const listAllProducts = async (req, res, next) => {
     next(e);
   }
 };
-// Requisito 02 - Crie endpoints para listar os produtos e as vendas
+// Requisito 02 - Crie endpoints para listar os produtos e as vendas 
 const listProductById = async (req, res, next) => {
   try {
     const { id } = req.params;
