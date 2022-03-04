@@ -26,6 +26,7 @@ const validate = (name, quantity) => {
 };
 // Requisito 04 - Crie um endpoint para o cadastro de produtos
 const createNewProduct = async ({ name, quantity }) => {
+  // const { name, quantity } = newProduct;
   const validations = validate(name, quantity);
     if (validations.message) {
       return { code: validations.code, json: { message: validations.message } };
