@@ -1,10 +1,10 @@
 const productsModel = require('../models/listProducts');
+const productsService = require('../services/listProducts');
 // Requisito 02 - Crie endpoints para listar os produtos e as vendas
 const listAllProducts = async (req, res, next) => {
   try {
-    const products = await productsModel.getAllProducts();
-    const sortedProducts = products.sort((a, b) => a.name - b.name);
-    return res.status(200).json(sortedProducts);
+    const products = await productsService.getAllProducts();
+    return res.status(products.code).json(products.json);
   } catch (e) {
     next(e);
   }
@@ -13,41 +13,20 @@ const listAllProducts = async (req, res, next) => {
 const listProductById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const product = await productsModel.getProductById(Number(id));
+    const product = await productsService.getProductById(Number(id));
   
-    if (!product.length) return res.status(404).json({ message: 'Product not found' });
-  
-    return res.status(200).json(product[0]);
+    return res.status(product.code).json(product.json);
   } catch (e) {
     next(e);
   }
-};
-// Requisito 03
-const validate = (name, quantity) => {
-  if (!name) return { code: 400, message: '"name" is required' };
-  if (name.length < 5) {
-    return { code: 422, message: '"name" length must be at least 5 characters long' };
-  }
-  if (quantity < 1) return { code: 422, message: '"quantity" must be greater than or equal to 1' };
-  if (!quantity) return { code: 400, message: '"quantity" is required' };
-  return {};
 };
 // Requisito 04 - Crie um endpoint para o cadastro de produtos
 const createNewProduct = async (req, res, next) => {
   try {
     const { name, quantity } = req.body;
-    const validations = validate(name, quantity);
-    if (validations.message) {
-      return res.status(validations.code).json({ message: validations.message });
-    }
+    const createdProduct = await productsService.createNewProduct({ name, quantity });
 
-    const products = await productsModel.getAllProducts();
-    const notUnique = products.find((product) => product.name === name);
-    if (notUnique) return res.status(409).json({ message: 'Product already exists' });
-
-    const createdProduct = await productsModel.createProduct({ name, quantity });
-
-    return res.status(201).json(createdProduct);
+    return res.status(createdProduct.code).json(createdProduct.json);
   } catch (e) {
     next(e);
   }
@@ -56,19 +35,11 @@ const createNewProduct = async (req, res, next) => {
 const editProductById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const product = await productsModel.getProductById(Number(id));
-  
-    if (!product.length) return res.status(404).json({ message: 'Product not found' });
-
     const { name, quantity } = req.body;
-    const validations = validate(name, quantity);
-    if (validations.message) {
-      return res.status(validations.code).json({ message: validations.message });
-    }
 
-    const editedProduct = await productsModel.editProduct({ id: Number(id), name, quantity });
+    const editedProduct = await productsService.editProductById({ id: Number(id), name, quantity });
 
-    return res.status(200).json(editedProduct);
+    return res.status(editedProduct.code).json(editedProduct.json);
   } catch (e) {
     next(e);
   }
