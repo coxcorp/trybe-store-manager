@@ -1,4 +1,5 @@
 const salesModel = require('../models/listSales');
+const validations = require('../middlewares/validations');
 // Requisito 02 - Crie endpoints para listar os produtos e as vendas
 const listAllSales = async () => {
   const sales = await salesModel.getAllSales();
@@ -21,22 +22,12 @@ const listSaleById = async (id) => {
   
   return { code: 200, json: sales };
 };
-// Requisito 03
-const validate = (productId, quantity) => {
-  if (!productId) return { code: 400, message: '"productId" is required' };
-  if (quantity < 1) {
-    return {
-    code: 422, message: '"quantity" must be greater than or equal to 1' };
-  }
-  if (!quantity) return { code: 400, message: '"quantity" is required' };
-  return {};
-};
 // Requisito 07 - Crie um endpoint para cadastrar vendas
 const createNewSale = async (order) => {
   const { productId, quantity } = order[0];
-  const validations = validate(productId, quantity);
-  if (validations.message) {
-    return { code: validations.code, json: { message: validations.message } };
+  const validate = validations.salesValidations(productId, quantity);
+  if (validate.message) {
+    return { code: validate.code, json: { message: validate.message } };
   }
 
   const createdOrder = await salesModel.createSale(order);
@@ -46,9 +37,9 @@ const createNewSale = async (order) => {
 
 // Requisito 08 - Crie um endpoint para atualizar uma venda
 const editSaleById = async ({ quantity, saleId, productId }) => {
-  const validations = validate(productId, quantity);
-  if (validations.message) {
-    return { code: validations.code, json: { message: validations.message } };
+  const validate = validations.salesValidations(productId, quantity);
+  if (validate.message) {
+    return { code: validate.code, json: { message: validate.message } };
   }
 
   const editedSale = await salesModel.editSaleById({ quantity, saleId, productId });
